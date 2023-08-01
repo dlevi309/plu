@@ -1,5 +1,9 @@
 #import <Foundation/Foundation.h>
 
+void printUsage() {
+    printf("Usage: %s [-p] [path]\n", getprogname());
+}
+
 void printObject(NSString *key, id object, int indent) {
     NSMutableString *indentation = [NSMutableString string];
     for (int i = 0; i < indent; i++) {
@@ -54,18 +58,35 @@ void printObject(NSString *key, id object, int indent) {
 }
 
 int main(int argc, char * argv[]) {
-    if (argc != 2) {
-        printf("Usage: %s [path]\n", getprogname());
+    int c;
+    BOOL printCF = NO;
+
+    NSString *path;
+
+    while ((c = getopt(argc, argv, "p")) != -1) {
+        if (c == 'p') {
+            printCF = YES;
+        } else {
+            printUsage();
+            return -1;
+        }
+    }
+
+    if (optind < argc) {
+        path = [NSString stringWithUTF8String:argv[optind]];
+    } else {
+        printUsage();
         return -1;
     }
 
     @autoreleasepool {
-        NSString *path = [NSString stringWithUTF8String:argv[1]];
         NSDictionary *content = [NSDictionary dictionaryWithContentsOfFile:path];
-        printObject(nil, content, 0);
-//         for (id key in content) {
-//             printObject(key, content[key], 0);
-//         }
+
+        if (printCF) {
+            puts(content.description.UTF8String);
+        } else {
+            printObject(nil, content, 0);
+        }
     }
     return 0;
 }
