@@ -6,6 +6,10 @@ Similar to `plutil(1)`'s -p switch.
 
 Build with `make`
 
+```sh
+$ Usage: plu [-p] [path]
+```
+
 Running `plu /System/Library/LaunchDaemons/com.apple.uikit.eyedropperd.plist` will get you an output like this:
 ```
 Dictionary[7]
@@ -18,6 +22,23 @@ Dictionary[7]
    UserName => "mobile"
    EnablePressuredExit => true
    Label => "com.apple.uikit.eyedropperd"
+```
+
+Running `plu -p` on the same file will get you an output like this:
+```
+{
+    EnablePressuredExit = 1;
+    Label = "com.apple.uikit.eyedropperd";
+    MachServices =     {
+        "com.apple.uikit.eyedropperd.service" = 1;
+    };
+    POSIXSpawnType = Interactive;
+    ProgramArguments =     (
+        "/System/Library/PrivateFrameworks/Eyedropper.framework/Support/eyedropperd"
+    );
+    ThrottleInterval = 1;
+    UserName = mobile;
+}
 ```
 
 It currently supports printing all property types backed by Foundation
